@@ -1,19 +1,19 @@
-console.log('tests');
-
 self.addEventListener('message', (e) => {
-  console.log('web worker started', e.data);
   let data = e.data;
 
   switch (data) {
     case 'First Message':
       self.postMessage('Frist message from web worker');
       break;
-    case 'Second Message':
-      self.postMessage('Send second message');
-      break;
-    case 'Api':
-      let url = 'https://jsonplaceholder.typicode.com/posts';
-      // self.postMessage
+    case 'fetchdata':
+      let fetchdata = fetch('https://jsonplaceholder.typicode.com/posts');
+        fetchdata.then(resp =>  resp.json())
+        .then(data => {
+           self.postMessage(data)
+        })
+        .catch(error => {
+          self.postMessage(error)
+        })
       break;
 
     default:

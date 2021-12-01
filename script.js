@@ -1,4 +1,6 @@
 const output = document.getElementById('app');
+const button = document.getElementById('postbutton');
+const postsElm = document.getElementById('posts')
 let worker;
 
 document.addEventListener('DOMContentLoaded', init);
@@ -10,17 +12,28 @@ function init() {
 
   worker.postMessage('First Message');
 
-  output.addEventListener('click', () => {
-    worker.postMessage('Second Message');
-  });
+  button.addEventListener('click', () => {
+      worker.postMessage('fetchdata')
+  })
 }
 
 function message(e) {
   let data = e.data;
-  output.textContent += data + '\n';
-  console.log(data);
+  if(typeof e.data === 'string'){
+    output.textContent += data + '\n';
+  }else{
+    outputList(e.data)
+  }
 }
 
 function error(error) {
-  console.log(error.message, error.filename);
+  console.log(error.message);
+}
+
+function outputList(posts){
+  let datalist;
+  for(var post in posts ){
+    datalist += `<li><h2>${posts[post].title}</h2><p>${posts[post].body}</p></li>`
+  }
+  postsElm.innerHTML = datalist;
 }
